@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: php-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./projeto-ToDo:/var/www/html
+    networks:
+      - xampp-network
+
+  #MySQL
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - xampp-network
+
+  #phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    networks:
+      - xampp-network
+
+volumes:
+  db_data:
+
+networks:
+  xampp-network:
+    driver: bridge
